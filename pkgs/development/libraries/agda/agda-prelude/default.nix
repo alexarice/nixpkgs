@@ -1,23 +1,32 @@
 { stdenv, mkDerivation, fetchFromGitHub }:
 
 mkDerivation rec {
-  version = "eacc961c2c312b7443109a7872f99d55557df317";
+  version = "compat-2.6.0";
   pname = "agda-prelude";
 
   src = fetchFromGitHub {
     owner = "UlfNorell";
     repo = "agda-prelude";
     rev = version;
-    sha256 = "0iql67hb1q0fn8dwkcx07brkdkxqfqrsbwjy71ndir0k7qzw7qv2";
+    sha256 = "16pysyq6nf37zk9js4l5gfd2yxgf2dh074r9507vqkg6vfhdj2w6";
   };
 
-  everythingFile = "src/Prelude.agda";
+  preConfigure = ''
+    cd test
+    make everything
+    mv Everything.agda ..
+    cd ..
+  '';
+
+  everythingFile = "./Everything.agda";
 
   meta = with stdenv.lib; {
     homepage = "https://github.com/UlfNorell/agda-prelude";
     description = "Programming library for Agda";
     license = stdenv.lib.licenses.mit;
     platforms = stdenv.lib.platforms.unix;
+    # broken since Agda 2.6.1
+    broken = true;
     maintainers = with maintainers; [ mudri alexarice ];
   };
 }
