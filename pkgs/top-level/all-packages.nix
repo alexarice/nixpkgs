@@ -14742,8 +14742,6 @@ in
 
   categories = callPackage ../development/libraries/agda/categories { };
 
-  pretty = callPackage ../development/libraries/agda/pretty { };
-
   ### DEVELOPMENT / LIBRARIES / JAVA
 
   commonsBcel = callPackage ../development/libraries/java/commons/bcel { };
