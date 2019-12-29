@@ -14746,8 +14746,6 @@ in
 
   pretty = callPackage ../development/libraries/agda/pretty { };
 
-  TotalParserCombinators = callPackage ../development/libraries/agda/TotalParserCombinators { };
-
   ### DEVELOPMENT / LIBRARIES / JAVA
 
   commonsBcel = callPackage ../development/libraries/java/commons/bcel { };
