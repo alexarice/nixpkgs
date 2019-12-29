@@ -14738,8 +14738,6 @@ in
     inherit (haskellPackages) ghcWithPackages;
   };
 
-  bitvector = callPackage ../development/libraries/agda/bitvector { };
-
   ### DEVELOPMENT / LIBRARIES / JAVA
 
   commonsBcel = callPackage ../development/libraries/java/commons/bcel { };
