@@ -695,4 +695,8 @@ self: super: builtins.intersectAttrs super {
       spagoWithoutChecks = dontCheck spagoFixHpack;
     in
     spagoWithoutChecks;
+
+  # For the --with-complier flag.  This will be included in the next Agda
+  # release (after 2.6.0.1), at which point this patch can be removed.
+  Agda = appendPatch super.Agda ./patches/agda-with-compiler.patch;
 }
