@@ -1,14 +1,14 @@
-{ stdenv, mkDerivation, fetchFromGitHub }:
+{ stdenv, mkDerivation, fetchFromGitHub, version, sha256 }:
 
-mkDerivation rec {
+mkDerivation {
+  inherit version;
   pname = "iowa-stdlib";
-  version = "1.5.0";
 
   src = fetchFromGitHub {
     owner = "cedille";
     repo  = "ial";
     rev = "v${version}";
-    sha256 = "0dlis6v6nzbscf713cmwlx8h9n2gxghci8y21qak3hp18gkxdp0g";
+    inherit sha256;
   };
 
   libraryFile = "";
