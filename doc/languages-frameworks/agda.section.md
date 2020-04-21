@@ -36,6 +36,7 @@ agda.withPackages {
   homeLibraries = "path/to/my/package.agda-lib";
 }
 ```
+multiple libraries can be passed in by separating them with newlines.
 
 Agda will not by default use these libraries. To tell agda to use the library we have some options:
 - Call `agda` with the library flag:
