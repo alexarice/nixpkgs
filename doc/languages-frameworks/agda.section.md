@@ -81,3 +81,5 @@ To add an agda package to `nixpkgs`, the derivation should be written to `pkgs/d
 { mkDerivation, standard-library, fetchFromGitHub }:
 ```
 and `mkDerivation` should be called instead of `agda.mkDerivation`.
+
+When writing an agda package it is essential to make sure that no `.agda-lib` file gets added to the store as a single file (for example by using `writeText`). This causes agda to think that the nix store is a agda library and it will attempt to write to it whenever it typechecks something.
