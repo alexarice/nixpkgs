@@ -5,11 +5,12 @@ let
   mkAgdaPackages' = Agda: self: let
     callPackage = self.callPackage;
   in {
-    inherit Agda;
     inherit (callPackage ../build-support/agda {
       inherit Agda self;
       inherit (pkgs.haskellPackages) ghcWithPackages;
     }) withPackages mkDerivation;
+
+    Agda = self.withPackages [];
 
     standard-library = callPackage ../development/libraries/agda/standard-library {
       inherit (pkgs.haskellPackages) ghcWithPackages;
