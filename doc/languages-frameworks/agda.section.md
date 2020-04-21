@@ -14,7 +14,8 @@ $ nix-env -iA agda.Agda
 
 To use agda with libraries, the `withPackages` function can be used. This function either takes:
 + A list of packages,
-+ or a function which returns a list of packages when given the `agda` attribute set.
++ or a function which returns a list of packages when given the `agda` attribute set,
++ or an attribute set containing a list of packages and local home libraries (see below).
 
 For example, suppose we wanted a version of agda which has access to the standard library. This can be obtained with the expressions:
 
@@ -36,14 +37,14 @@ agda.withPackages {
   homeLibraries = "path/to/my/package.agda-lib";
 }
 ```
-multiple libraries can be passed in by separating them with newlines.
+Multiple libraries can be passed in by separating them with newlines.
 
 Agda will not by default use these libraries. To tell agda to use the library we have some options:
 - Call `agda` with the library flag:
 ```
 $ agda -l standard-library -i . MyFile.agda
 ```
-- Write a `.agda-lib` file for the project you are working on which may look like:
+- Write a `my-library.agda-lib` file for the project you are working on which may look like:
 ```
 name: my-library
 include: .
@@ -54,7 +55,8 @@ depends: standard-library
 More information can be found [here](https://agda.readthedocs.io/en/v2.6.0.1/tools/package-system.html).
 
 ## Compiling Agda
-Agda modules can be compiled with the `--compile` flag. A version of `ghc` with `ieee` is made available to the Agda program via the `--with-compiler` flag. This can be overriden by a different version of `ghc` as follows:
+Agda modules can be compiled with the `--compile` flag. A version of `ghc` with `ieee` is made available to the Agda program via the `--with-compiler` flag.
+This can be overridden by a different version of `ghc` as follows:
 
 ```
 agda.withPackages {
@@ -68,11 +70,11 @@ To write a nix derivation for an agda library, first check that the library has 
 
 A derivation can then be written using `agda.mkDerivation`. This has similar arguments to `stdenv.mkDerivation` with the following exceptions:
 + The `buildInputsAgda` should be used for agda library dependencies.
-+ `everythingFile` can be used to specify the location of the `Everything.agda` file, defaulting to `./Everything.agda`. If this file does not exist then either it should be patched in or the buildPhase should be overriden (see below).
++ `everythingFile` can be used to specify the location of the `Everything.agda` file, defaulting to `./Everything.agda`. If this file does not exist then either it should be patched in or the `buildPhase` should be overridden (see below).
 + `libraryName` should be the name that appears in the `*.agda-lib` file, defaulting to `pname`.
 + `libraryFile` should be the file name of the `*.agda-lib` file, defaulting to `${libraryName}.agda-lib`.
 
-The build phase for `agda.mkDerivation` simply runs `agda` on the `Everything.agda` file. If something else is needed to build the package (e.g. `make`) then the buildPhase should be overriden (or a `preBuild` or `configurePhase` can be used if there are steps that need to be done prior to checking the `Everything.agda` file). A version of `agda` with the libraries `buildInputsAgda` is available during the build phase. The install phase simply copies all `.agda`, `.agdai` and `.agda-lib` files to the output directory. Again, this can be overriden.
+The build phase for `agda.mkDerivation` simply runs `agda` on the `Everything.agda` file. If something else is needed to build the package (e.g. `make`) then the `buildPhase` should be overridden (or a `preBuild` or `configurePhase` can be used if there are steps that need to be done prior to checking the `Everything.agda` file). A version of `agda` with the libraries `buildInputsAgda` is available during the build phase. The install phase simply copies all `.agda`, `.agdai` and `.agda-lib` files to the output directory. Again, this can be overridden.
 
 To add an agda package to `nixpkgs`, the derivation should be written to `pkgs/development/libraries/agda/${library-name}/` and an entry should be added to `pkgs/top-level/agda-packages.nix`. Here it is called in a scope with access to all other agda libraries, so the top line of the `default.nix` can look like:
 ```
