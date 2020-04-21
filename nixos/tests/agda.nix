@@ -5,6 +5,7 @@ let
     module TestModule where
   '';
   # Make sure this does not get put in the nix store as an agda-lib file
+  # See https://github.com/agda/agda/issues/4613
   mylibFile = pkgs.writeText "agda-lib-file" ''
     name: mylib
     include: src
