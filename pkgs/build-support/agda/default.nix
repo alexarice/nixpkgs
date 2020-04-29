@@ -26,6 +26,7 @@ let
       --add-flags "--with-compiler=${ghc}/bin/ghc" \
       --add-flags "--library-file=${library-file}" \
       --add-flags "--local-interfaces"
+    makeWrapper ${Agda}/bin/agda-mode $out/bin/agda-mode
     ''; # Local interfaces has been added for now: See https://github.com/agda/agda/issues/4526
 
   withPackages = arg: if builtins.isAttrs arg then withPackages' arg else withPackages' { pkgs = arg; };
