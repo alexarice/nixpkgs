@@ -7,20 +7,20 @@ date: 2020-01-06
 
 ## How to use Agda
 
-Agda can be installed with `agda.Agda`. For example:
+Agda can be installed from `agda`:
 ```
-$ nix-env -iA agda.Agda
+$ nix-env -iA agda
 ```
 
-To use agda with libraries, the `withPackages` function can be used. This function either takes:
+To use agda with libraries, the `agda.withPackages` function can be used. This function either takes:
 + A list of packages,
-+ or a function which returns a list of packages when given the `agda` attribute set,
++ or a function which returns a list of packages when given the `agdaPackages` attribute set,
 + or an attribute set containing a list of packages and local home libraries (see below).
 
 For example, suppose we wanted a version of agda which has access to the standard library. This can be obtained with the expressions:
 
 ```
-agda.withPackages [ agda.standard-library ]
+agda.withPackages [ agdaPackages.standard-library ]
 ```
 
 or
@@ -60,18 +60,18 @@ agda.withPackages {
 ## Writing Agda packages
 To write a nix derivation for an agda library, first check that the library has a `*.agda-lib` file.
 
-A derivation can then be written using `agda.mkDerivation`. This has similar arguments to `stdenv.mkDerivation` with the following additions:
+A derivation can then be written using `agdaPackages.mkDerivation`. This has similar arguments to `stdenv.mkDerivation` with the following additions:
 + `everythingFile` can be used to specify the location of the `Everything.agda` file, defaulting to `./Everything.agda`. If this file does not exist then either it should be patched in or the `buildPhase` should be overridden (see below).
 + `libraryName` should be the name that appears in the `*.agda-lib` file, defaulting to `pname`.
 + `libraryFile` should be the file name of the `*.agda-lib` file, defaulting to `${libraryName}.agda-lib`.
 
-The build phase for `agda.mkDerivation` simply runs `agda` on the `Everything.agda` file. If something else is needed to build the package (e.g. `make`) then the `buildPhase` should be overridden (or a `preBuild` or `configurePhase` can be used if there are steps that need to be done prior to checking the `Everything.agda` file). `agda` and the Agda libraries contained in `buildInputs` are made available during the build phase. The install phase simply copies all `.agda`, `.agdai` and `.agda-lib` files to the output directory. Again, this can be overridden.
+The build phase for `agdaPackages.mkDerivation` simply runs `agda` on the `Everything.agda` file. If something else is needed to build the package (e.g. `make`) then the `buildPhase` should be overridden (or a `preBuild` or `configurePhase` can be used if there are steps that need to be done prior to checking the `Everything.agda` file). `agda` and the Agda libraries contained in `buildInputs` are made available during the build phase. The install phase simply copies all `.agda`, `.agdai` and `.agda-lib` files to the output directory. Again, this can be overridden.
 
 To add an agda package to `nixpkgs`, the derivation should be written to `pkgs/development/libraries/agda/${library-name}/` and an entry should be added to `pkgs/top-level/agda-packages.nix`. Here it is called in a scope with access to all other agda libraries, so the top line of the `default.nix` can look like:
 ```
 { mkDerivation, standard-library, fetchFromGitHub }:
 ```
-and `mkDerivation` should be called instead of `agda.mkDerivation`. Here is an example skeleton derivation for iowa-stdlib:
+and `mkDerivation` should be called instead of `agdaPackages.mkDerivation`. Here is an example skeleton derivation for iowa-stdlib:
 
 ```
 mkDerivation {

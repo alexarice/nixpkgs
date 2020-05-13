@@ -4,13 +4,14 @@ let
   mkAgdaPackages = Agda: lib.makeScope newScope (mkAgdaPackages' Agda);
   mkAgdaPackages' = Agda: self: let
     callPackage = self.callPackage;
-  in {
     inherit (callPackage ../build-support/agda {
       inherit Agda self;
       inherit (pkgs.haskellPackages) ghcWithPackages;
     }) withPackages mkDerivation;
+  in {
+    inherit mkDerivation;
 
-    Agda = self.withPackages [];
+    agda = withPackages [] // { inherit withPackages; };
 
     standard-library = callPackage ../development/libraries/agda/standard-library {
       inherit (pkgs.haskellPackages) ghcWithPackages;
